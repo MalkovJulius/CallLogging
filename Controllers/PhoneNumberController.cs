@@ -18,37 +18,86 @@ namespace CallLogging.Controllers
 
         // GET: api/<PhoneNumberController>
         [HttpGet]
-        public async Task<IEnumerable<PhoneNumberDto>> GetAll()
+        public async Task<ActionResult<IEnumerable<PhoneNumberDto>>> GetAll()
         {
-            return await _service.GetAllPhoneNumbersAsync();
+            try
+            {
+                return Ok(await _service.GetAllPhoneNumbersAsync());
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // GET api/<PhoneNumberController>/5
         [HttpGet("{id}")]
-        public async Task<PhoneNumberDto> Get(int id)
+        public async Task<ActionResult<PhoneNumberDto>> Get(int id)
         {
-            return await _service.GetPhoneNumberByIdAsync(id);
+            try
+            {
+                var instance = await _service.GetPhoneNumberByIdAsync(id);
+                return instance == null ? NotFound() : Ok(instance);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // POST api/<PhoneNumberController>
         [HttpPost]
-        public async Task Create(PhoneNumberDto dto)
+        public async Task<ActionResult> Create(PhoneNumberDto dto)
         {
-            await _service.CreatePhoneNumberAsync(dto);
+            try
+            {
+                if (dto == null) return BadRequest("dto object is null");
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+
+                await _service.CreatePhoneNumberAsync(dto);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // PUT api/<PhoneNumberController>
         [HttpPut]
-        public async Task Update(PhoneNumberDto dto)
+        public async Task<ActionResult> Update(PhoneNumberDto dto)
         {
-            await _service.UpdatePhoneNumberAsync(dto);
+            try
+            {
+                if (dto == null) return BadRequest("dto object is null");
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+
+                await _service.UpdatePhoneNumberAsync(dto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // DELETE api/<PhoneNumberController>/5
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            await _service.DeletePhoneNumberAsync(id);
+            try
+            {
+                await _service.DeletePhoneNumberAsync(id);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
     }
 }

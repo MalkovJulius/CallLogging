@@ -18,37 +18,86 @@ namespace CallLogging.Controllers
 
         // GET: api/<ContactController>
         [HttpGet]
-        public async Task<IEnumerable<ContactDto>> GetAll()
+        public async Task<ActionResult<IEnumerable<ContactDto>>> GetAll()
         {
-            return await _service.GetAllContactsAsync();
+            try
+            {
+                return Ok(await _service.GetAllContactsAsync());
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // GET api/<ContactController>/5
         [HttpGet("{id}")]
-        public async Task<ContactDto> Get(int id)
+        public async Task<ActionResult<ContactDto>> Get(int id)
         {
-            return await _service.GetContactByIdAsync(id);
+            try
+            {
+                var instance = await _service.GetContactByIdAsync(id);
+                return instance == null ? NotFound() : Ok(instance);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // POST api/<ContactController>
         [HttpPost]
-        public async Task Create(ContactDto dto)
+        public async Task<ActionResult> Create(ContactDto dto)
         {
-            await _service.CreateContactAsync(dto);
+            try
+            {
+                if (dto == null) return BadRequest("dto object is null");
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+
+                await _service.CreateContactAsync(dto);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // PUT api/<ContactController>
         [HttpPut]
-        public async Task Update(ContactDto dto)
+        public async Task<ActionResult> Update(ContactDto dto)
         {
-            await _service.UpdateContactAsync(dto);
+            try
+            {
+                if (dto == null) return BadRequest("dto object is null");
+                if (!ModelState.IsValid) return BadRequest(ModelState);
+
+                await _service.UpdateContactAsync(dto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // DELETE api/<ContactController>/5
         [HttpDelete("{id}")]
-        public async Task Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            await _service.DeleteContactAsync(id);
+            try
+            {
+                await _service.DeleteContactAsync(id);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
     }
 }

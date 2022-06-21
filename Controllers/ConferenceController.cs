@@ -21,45 +21,82 @@ namespace CallLogging.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ConferenceDto>>> GetAll()
         {
-            return Ok(await _service.GetAllConferencesAsync());
+            try
+            {
+                return Ok(await _service.GetAllConferencesAsync());
+            }
+            catch(Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // GET api/<ConferenceController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ConferenceDto>> Get(int id)
         {
-            var dto = await _service.GetConferenceByIdAsync(id);
-            return dto == null ? NotFound() : Ok(dto);
+            try
+            {
+                var instance = await _service.GetConferenceByIdAsync(id);
+                return instance == null ? NotFound() : Ok(instance);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // POST api/<ConferenceController>
         [HttpPost]
         public async Task<ActionResult> Create(ConferenceDto dto)
         {
-            if (dto == null) return BadRequest("dto object is null");
+            try
+            {
+                if (dto == null) return BadRequest("dto object is null");
 
-            await _service.CreateConferenceAsync(dto);//get id from oblect
-            return CreatedAtRoute(nameof(Get), new { Id = 1});
+                await _service.CreateConferenceAsync(dto);
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // PUT api/<ConferenceController>
         [HttpPut]
         public async Task<ActionResult> Update(ConferenceDto dto)
         {
-            if (dto == null) return BadRequest("dto object is null");
+            try
+            {
+                if (dto == null) return BadRequest("dto object is null");
 
-            await _service.UpdateConferenceAsync(dto);//return value for correct request
-            //if (instance == null) return NotFound();
-            return NoContent();
-
+                await _service.UpdateConferenceAsync(dto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
 
         // DELETE api/<ConferenceController>/5
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            await _service.DeleteConferenceAsync(id);
-            return NoContent();
+            try
+            {
+                await _service.DeleteConferenceAsync(id);
+                return NoContent();
+            }            
+            catch (Exception e)
+            {
+                return StatusCode(500, e.Message);
+            }
         }
     }
 }

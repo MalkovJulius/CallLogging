@@ -11,12 +11,13 @@ namespace CallLogging.Services.ConferenceService
             _repo = repo;
         }
 
+        //TODO: do a pagination
         public async Task<IEnumerable<ConferenceDto>> GetAllConferencesAsync()
         {
             throw new NotImplementedException();
         }
 
-        public async Task<ConferenceDto> GetConferenceByIdAsync(int id)
+        public async Task<ConferenceDto?> GetConferenceByIdAsync(int id)
         {
             throw new NotImplementedException();
         }

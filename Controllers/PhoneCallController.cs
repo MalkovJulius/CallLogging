@@ -18,7 +18,7 @@ namespace CallLogging.Controllers
 
         // GET: api/<PhoneCallController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PhoneCallDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<PhoneCallDto>>> GetAllAsync()
         {
             try
             {
@@ -32,7 +32,7 @@ namespace CallLogging.Controllers
 
         // GET api/<PhoneCallController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PhoneCallDto>> Get(int id)
+        public async Task<ActionResult<PhoneCallDto>> GetAsync(int id)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace CallLogging.Controllers
 
         // POST api/<PhoneCallController>
         [HttpPost]
-        public async Task<ActionResult> Create(PhoneCallDto dto)
+        public async Task<ActionResult> CreateAsync(PhoneCallDto dto)
         {
             try
             {
@@ -56,13 +56,13 @@ namespace CallLogging.Controllers
                 await _service.CreatePhoneCallAsync(dto);
                 return NoContent();
             }
-            catch (KeyNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
             catch (ArgumentNullException e)
             {
                 return BadRequest(e.Message);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
             }
             catch (Exception e)
             {
@@ -72,7 +72,7 @@ namespace CallLogging.Controllers
 
         // PUT api/<PhoneCallController>
         [HttpPut]
-        public async Task<ActionResult> Update(PhoneCallDto dto)
+        public async Task<ActionResult> UpdateAsync(PhoneCallDto dto)
         {
             try
             {
@@ -81,9 +81,9 @@ namespace CallLogging.Controllers
                 await _service.UpdatePhoneCallAsync(dto);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
+            catch (KeyNotFoundException e)
             {
-                return NotFound();
+                return NotFound(e.Message);
             }
             catch (Exception e)
             {
@@ -93,7 +93,7 @@ namespace CallLogging.Controllers
 
         // DELETE api/<PhoneCallController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
             try
             {

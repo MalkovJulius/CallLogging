@@ -18,7 +18,7 @@ namespace CallLogging.Controllers
 
         // GET: api/<PhoneNumberController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PhoneNumberDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<PhoneNumberDto>>> GetAllAsync()
         {
             try
             {
@@ -32,7 +32,7 @@ namespace CallLogging.Controllers
 
         // GET api/<PhoneNumberController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<PhoneNumberDto>> Get(int id)
+        public async Task<ActionResult<PhoneNumberDto>> GetAsync(int id)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace CallLogging.Controllers
 
         // POST api/<PhoneNumberController>
         [HttpPost]
-        public async Task<ActionResult> Create(PhoneNumberDto dto)
+        public async Task<ActionResult> CreateAsync(PhoneNumberDto dto)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace CallLogging.Controllers
 
         // PUT api/<PhoneNumberController>
         [HttpPut]
-        public async Task<ActionResult> Update(PhoneNumberDto dto)
+        public async Task<ActionResult> UpdateAsync(PhoneNumberDto dto)
         {
             try
             {
@@ -75,9 +75,13 @@ namespace CallLogging.Controllers
                 await _service.UpdatePhoneNumberAsync(dto);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
+            catch (ArgumentNullException e)
             {
-                return NotFound();
+                return BadRequest(e.Message);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
             }
             catch (Exception e)
             {
@@ -87,7 +91,7 @@ namespace CallLogging.Controllers
 
         // DELETE api/<PhoneNumberController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
             try
             {

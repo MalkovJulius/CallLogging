@@ -19,7 +19,7 @@ namespace CallLogging.Controllers
 
         // GET: api/<ConferenceController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ConferenceDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<ConferenceDto>>> GetAllAsync()
         {
             try
             {
@@ -33,7 +33,7 @@ namespace CallLogging.Controllers
 
         // GET api/<ConferenceController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ConferenceDto>> Get(int id)
+        public async Task<ActionResult<ConferenceDto>> GetAsync(int id)
         {
             try
             {
@@ -48,15 +48,14 @@ namespace CallLogging.Controllers
 
         // POST api/<ConferenceController>
         [HttpPost]
-        public async Task<IActionResult> Create(ConferenceDto dto)
+        public async Task<IActionResult> CreateAsync(ConferenceDto dto)
         {
             try
             {
                 if (dto == null) return BadRequest("dto object is null");
 
                 await _service.CreateConferenceAsync(dto);
-                //return NoContent();
-                return CreatedAtAction(nameof(Create), null);
+                return CreatedAtAction(nameof(CreateAsync), null);
             }
             catch (Exception e)
             {
@@ -66,7 +65,7 @@ namespace CallLogging.Controllers
 
         // PUT api/<ConferenceController>
         [HttpPut]
-        public async Task<IActionResult> Update(ConferenceDto dto)
+        public async Task<IActionResult> UpdateAsync(ConferenceDto dto)
         {
             try
             {
@@ -75,9 +74,13 @@ namespace CallLogging.Controllers
                 await _service.UpdateConferenceAsync(dto);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
+            catch (ArgumentNullException e)
             {
-                return NotFound();
+                return BadRequest(e.Message);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
             }
             catch (Exception e)
             {
@@ -87,7 +90,7 @@ namespace CallLogging.Controllers
 
         // DELETE api/<ConferenceController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             try
             {

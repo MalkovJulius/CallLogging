@@ -18,7 +18,7 @@ namespace CallLogging.Controllers
 
         // GET: api/<ContactController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ContactDto>>> GetAll()
+        public async Task<ActionResult<IEnumerable<ContactDto>>> GetAllAsync()
         {
             try
             {
@@ -32,7 +32,7 @@ namespace CallLogging.Controllers
 
         // GET api/<ContactController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ContactDto>> Get(int id)
+        public async Task<ActionResult<ContactDto>> GetAsync(int id)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace CallLogging.Controllers
 
         // POST api/<ContactController>
         [HttpPost]
-        public async Task<ActionResult> Create(ContactDto dto)
+        public async Task<ActionResult> CreateAsync(ContactDto dto)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace CallLogging.Controllers
 
         // PUT api/<ContactController>
         [HttpPut]
-        public async Task<ActionResult> Update(ContactDto dto)
+        public async Task<ActionResult> UpdateAsync(ContactDto dto)
         {
             try
             {
@@ -75,9 +75,13 @@ namespace CallLogging.Controllers
                 await _service.UpdateContactAsync(dto);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
+            catch (ArgumentNullException e)
             {
-                return NotFound();
+                return BadRequest(e.Message);
+            }
+            catch (KeyNotFoundException e)
+            {
+                return NotFound(e.Message);
             }
             catch (Exception e)
             {
@@ -87,7 +91,7 @@ namespace CallLogging.Controllers
 
         // DELETE api/<ContactController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
             try
             {

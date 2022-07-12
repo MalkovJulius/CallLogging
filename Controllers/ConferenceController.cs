@@ -48,14 +48,15 @@ namespace CallLogging.Controllers
 
         // POST api/<ConferenceController>
         [HttpPost]
-        public async Task<ActionResult> Create(ConferenceDto dto)
+        public async Task<IActionResult> Create(ConferenceDto dto)
         {
             try
             {
                 if (dto == null) return BadRequest("dto object is null");
 
                 await _service.CreateConferenceAsync(dto);
-                return NoContent();
+                //return NoContent();
+                return CreatedAtAction(nameof(Create), null);
             }
             catch (Exception e)
             {
@@ -65,7 +66,7 @@ namespace CallLogging.Controllers
 
         // PUT api/<ConferenceController>
         [HttpPut]
-        public async Task<ActionResult> Update(ConferenceDto dto)
+        public async Task<IActionResult> Update(ConferenceDto dto)
         {
             try
             {
@@ -86,7 +87,7 @@ namespace CallLogging.Controllers
 
         // DELETE api/<ConferenceController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {

@@ -11,15 +11,9 @@ namespace CallLogging.Data.ContactRepo
             _context = context;
         }
 
-        public IQueryable<Contact> GetAll()
-        {
-            return _context.Contacts;
-        }
+        public IQueryable<Contact> GetAll() => _context.Contacts;
 
-        public async Task<Contact> GetByIdAsync(int id)
-        {
-            return await _context.Contacts.FirstOrDefaultAsync(c => c.Id == id);
-        }
+        public async Task<Contact> GetByIdAsync(int id) => await _context.Contacts.FirstOrDefaultAsync(c => c.Id == id);
 
         public async Task CreateAsync(Contact instance)
         {

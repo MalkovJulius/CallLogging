@@ -11,15 +11,9 @@ namespace CallLogging.Data.PhoneNumberRepo
             _context = context;
         }
 
-        public IQueryable<PhoneNumber> GetAll()
-        {
-            return _context.PhoneNumbers;
-        }
+        public IQueryable<PhoneNumber> GetAll() => _context.PhoneNumbers;
 
-        public async Task<PhoneNumber> GetByIdAsync(int id)
-        {
-            return await _context.PhoneNumbers.FirstOrDefaultAsync(c => c.Id == id);
-        }
+        public async Task<PhoneNumber> GetByIdAsync(int id) => await _context.PhoneNumbers.FirstOrDefaultAsync(c => c.Id == id);
 
         public async Task CreateAsync(PhoneNumber instance)
         {

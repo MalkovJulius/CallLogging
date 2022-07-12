@@ -1,5 +1,4 @@
-﻿using CallLogging.Data.ContactRepo;
-using CallLogging.Data.PhoneCallRepo;
+﻿using CallLogging.Data.PhoneCallRepo;
 using CallLogging.Data.PhoneNumberRepo;
 using CallLogging.Dtos;
 using CallLogging.Models;
@@ -17,9 +16,9 @@ namespace CallLogging.Services.PhoneCallService
             _phoneNumberRepo = phoneNumberRepo;
         }
 
-        //TODO: do a pagination
         public async Task<IEnumerable<PhoneCallDto>> GetAllPhoneCallsAsync()
         {
+            //TODO: do a pagination
             return await _phoneCallRepo.GetAll()
                 .Take(10)
                 .Select(phoneCall => new PhoneCallDto
@@ -44,11 +43,11 @@ namespace CallLogging.Services.PhoneCallService
                 .ToListAsync();
         }
 
-        public async Task<PhoneCallDto?> GetPhoneCallByIdAsync(int id)
+        public async Task<PhoneCallDto> GetPhoneCallByIdAsync(int id)
         {
             var phoneCall = await _phoneCallRepo.GetByIdAsync(id);
             return phoneCall == null
-                ? null
+                ? throw new KeyNotFoundException(nameof(phoneCall))
                 : new PhoneCallDto
                 {
                     Id = phoneCall.Id,
@@ -73,7 +72,7 @@ namespace CallLogging.Services.PhoneCallService
         public async Task CreatePhoneCallAsync(PhoneCallDto phoneCallDto)
         {
             //TODO: do a uniqueness check
-            if (phoneCallDto == null) return;
+            if (phoneCallDto == null) throw new ArgumentNullException(nameof(phoneCallDto)); ;
 
             if (phoneCallDto.PhoneNumberCallerId == null || phoneCallDto.PhoneNumberRecipientId == null)
             {
@@ -101,6 +100,8 @@ namespace CallLogging.Services.PhoneCallService
 
         public async Task UpdatePhoneCallAsync(PhoneCallDto phoneCallDto)
         {
+            if (phoneCallDto == null) throw new ArgumentNullException(nameof(phoneCallDto));
+
             var phoneCall = await _phoneCallRepo.GetByIdAsync(phoneCallDto.Id);
             if (phoneCall == null) throw new KeyNotFoundException();
 
@@ -114,7 +115,7 @@ namespace CallLogging.Services.PhoneCallService
         public async Task DeletePhoneCallAsync(int id)
         {
             var phoneCall = await _phoneCallRepo.GetByIdAsync(id);
-            if (phoneCall == null) return;
+            if (phoneCall == null) throw new KeyNotFoundException(nameof(phoneCall));
 
             await _phoneCallRepo.DeleteAsync(phoneCall);
         }

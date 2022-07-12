@@ -11,15 +11,9 @@ namespace CallLogging.Data.ConferenceRepo
             _context = context;
         }
 
-        public IQueryable<Conference> GetAll()
-        {
-            return _context.Conferences;
-        }
+        public IQueryable<Conference> GetAll() => _context.Conferences;
 
-        public async Task<Conference> GetByIdAsync(int id)
-        {
-            return await _context.Conferences.FirstOrDefaultAsync(c => c.Id == id);
-        }
+        public async Task<Conference> GetByIdAsync(int id) => await _context.Conferences.FirstOrDefaultAsync(c => c.Id == id);
 
         public async Task CreateAsync(Conference instance)
         {
